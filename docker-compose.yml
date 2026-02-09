@@ -1,0 +1,25 @@
+# docker-compose.yml
+
+volumes:
+  pg_shop_data:
+
+networks:
+  shop_net:
+    driver: bridge
+
+services:
+  pg_shop_service:
+    image: postgres:16
+    container_name: pg_shop
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${SHOP_PG_DB}
+      POSTGRES_USER: ${SHOP_PG_SUPERUSER}
+      POSTGRES_PASSWORD: ${SHOP_PG_SUPERPASS}
+    ports:
+      - "${SHOP_PG_PORT_LOCAL}:${SHOP_PG_PORT}"
+    volumes:
+      - pg_shop_data:/var/lib/postgresql/data
+      #- db/sql/sql_init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - shop_net
